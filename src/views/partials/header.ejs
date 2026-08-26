@@ -1,0 +1,30 @@
+<header class="header">
+    <div class="container header-content">
+        <div class="logo">
+            <a href="/"><i class="fas fa-store"></i> Prime-Cart</a>
+        </div>
+        
+        <div class="header-actions">
+            <div class="search-bar">
+                <form action="/products" method="get">
+                    <!-- ✅ Fixed: Check if search exists before using it -->
+                    <input type="text" name="search" placeholder="Search products..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="/products"><i class="fas fa-list"></i> Products</a>
+                <% if (user) { %>
+                    <a href="/orders"><i class="fas fa-box"></i> Orders</a>
+                    <a href="/cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <span class="user-name"><i class="fas fa-user"></i> <%= user.name %></span>
+                <% } else { %>
+                    <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+                <% } %>
+            </nav>
+        </div>
+    </div>
+</header>

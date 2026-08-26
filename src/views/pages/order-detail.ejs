@@ -1,0 +1,83 @@
+<div class="order-detail-page">
+    <div class="order-detail-header">
+        <h1>Order Details</h1>
+        <a href="/orders" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+    </div>
+    
+    <div class="order-detail-card">
+        <div class="order-info-grid">
+            <div class="info-item">
+                <label>Order ID:</label>
+                <span><%= order._id %></span>
+            </div>
+            <div class="info-item">
+                <label>Date:</label>
+                <span><%= order.orderDate.toLocaleString() %></span>
+            </div>
+            <div class="info-item">
+                <label>Status:</label>
+                <span class="order-status <%= order.orderStatus %>">
+                    <i class="fas <%= order.orderStatus === 'delivered' ? 'fa-check-circle' : 'fa-clock' %>"></i>
+                    <%= order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1) %>
+                </span>
+            </div>
+            <div class="info-item">
+                <label>Payment Status:</label>
+                <span class="payment-status <%= order.paymentStatus %>">
+                    <i class="fas <%= order.paymentStatus === 'paid' ? 'fa-check-circle' : 'fa-clock' %>"></i>
+                    <%= order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1) %>
+                </span>
+            </div>
+        </div>
+        
+        <div class="order-items-section">
+            <h2>Order Items</h2>
+            <table class="order-items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% order.items.forEach(item => { %>
+                        <tr>
+                            <td><%= item.name %></td>
+                            <td><%= item.quantity %></td>
+                            <td>$<%= item.price.toFixed(2) %></td>
+                            <td>$<%= (item.price * item.quantity).toFixed(2) %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="total-label">Total Amount</td>
+                        <td class="total-amount">$<%= order.totalAmount.toFixed(2) %></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="order-address-section">
+            <h2>Shipping Address</h2>
+            <div class="address-details">
+                <p><%= order.shippingAddress.street %></p>
+                <p><%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> <%= order.shippingAddress.zipCode %></p>
+                <p><%= order.shippingAddress.country %></p>
+            </div>
+        </div>
+        
+        <% if (order.orderStatus === 'pending') { %>
+            <div class="order-actions">
+                <form action="/orders/<%= order._id %>/cancel?_method=PUT" method="post">
+                    <button type="submit" class="btn btn-danger" 
+                            onclick="return confirm('Are you sure you want to cancel this order?')">
+                        <i class="fas fa-times"></i> Cancel Order
+                    </button>
+                </form>
+            </div>
+        <% } %>
+    </div>
+</div>

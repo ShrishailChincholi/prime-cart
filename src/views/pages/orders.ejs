@@ -1,0 +1,49 @@
+<div class="orders-page">
+    <h1>My Orders</h1>
+    
+    <% if (orders && orders.length > 0) { %>
+        <div class="orders-list">
+            <% orders.forEach(order => { %>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">Order #<%= order._id %></span>
+                            <span class="order-date">
+                                <i class="fas fa-calendar"></i> <%= order.orderDate.toLocaleDateString() %>
+                            </span>
+                        </div>
+                        <span class="order-status <%= order.orderStatus %>">
+                            <i class="fas <%= order.orderStatus === 'delivered' ? 'fa-check-circle' : 'fa-clock' %>"></i>
+                            <%= order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1) %>
+                        </span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-items">
+                            <% order.items.slice(0, 3).forEach(item => { %>
+                                <div class="order-item">
+                                    <span><%= item.name %> x<%= item.quantity %></span>
+                                </div>
+                            <% }) %>
+                            <% if (order.items.length > 3) { %>
+                                <span class="more-items">+ <%= order.items.length - 3 %> more items</span>
+                            <% } %>
+                        </div>
+                        <div class="order-footer">
+                            <span class="order-total">Total: $<%= order.totalAmount.toFixed(2) %></span>
+                            <a href="/orders/<%= order._id %>" class="btn btn-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders yet</h3>
+            <p>Start shopping and place your first order!</p>
+            <a href="/products" class="btn btn-primary">Shop Now</a>
+        </div>
+    <% } %>
+</div>

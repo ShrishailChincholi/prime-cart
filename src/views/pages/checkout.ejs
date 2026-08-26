@@ -1,0 +1,84 @@
+<div class="checkout-page">
+    <h1>Checkout</h1>
+    
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <form action="/orders/checkout" method="post">
+                <div class="form-section">
+                    <h2>Shipping Address</h2>
+                    <div class="form-group">
+                        <label for="address">Street Address:</label>
+                        <input type="text" id="address" name="address" required 
+                               value="<%= user.address ? user.address.street : '' %>">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" name="city" required
+                                   value="<%= user.address ? user.address.city : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State:</label>
+                            <input type="text" id="state" name="state" required
+                                   value="<%= user.address ? user.address.state : '' %>">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code:</label>
+                            <input type="text" id="zipCode" name="zipCode" required
+                                   value="<%= user.address ? user.address.zipCode : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <input type="text" id="country" name="country" required
+                                   value="<%= user.address ? user.address.country : '' %>">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2>Payment Method</h2>
+                    <div class="payment-options">
+                        <label>
+                            <input type="radio" name="paymentMethod" value="cod" checked>
+                            Cash on Delivery
+                        </label>
+                        <label>
+                            <input type="radio" name="paymentMethod" value="credit_card">
+                            Credit Card
+                        </label>
+                        <label>
+                            <input type="radio" name="paymentMethod" value="paypal">
+                            PayPal
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success btn-large">
+                    <i class="fas fa-check"></i> Place Order
+                </button>
+            </form>
+        </div>
+        
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <% if (cart.items) { %>
+                <div class="checkout-items">
+                    <% cart.items.forEach(item => { %>
+                        <div class="checkout-item">
+                            <span><%= item.product.name %> x<%= item.quantity %></span>
+                            <span>$<%= (item.price * item.quantity).toFixed(2) %></span>
+                        </div>
+                    <% }) %>
+                </div>
+                <div class="checkout-total">
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span class="total-price">$<%= cart.totalPrice.toFixed(2) %></span>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,222 @@
+<div class="cart-page">
+
+    <h1>Shopping Cart</h1>
+
+    <% if (cart.items && cart.items.length > 0) { %>
+
+        <div class="cart-container">
+
+            <!-- ================= Cart Items ================= -->
+            <div class="cart-items">
+
+                <% cart.items.forEach((item) => { %>
+
+                    <div class="cart-item">
+
+                        <!-- Product Image -->
+                        <div class="cart-item-image">
+
+                            <img
+                                src="<%= item.product && item.product.image ? item.product.image : '/images/default-product.jpg' %>"
+                                alt="<%= item.product && item.product.name ? item.product.name : 'Product Image' %>"
+                                onerror="this.onerror=null; this.src='/images/default-product.jpg';"
+                            >
+
+                        </div>
+
+
+                        <!-- Product Details -->
+                        <div class="cart-item-details">
+
+                            <h3>
+                                <%= item.product && item.product.name
+                                    ? item.product.name
+                                    : 'Product' %>
+                            </h3>
+
+
+                            <p class="item-price">
+                                $<%= Number(item.price).toFixed(2) %>
+                            </p>
+
+
+                            <!-- Update Quantity Form -->
+                            <form
+                                action="/cart/update/<%= item._id %>?_method=PUT"
+                                method="POST"
+                                class="update-cart-form"
+                            >
+
+                                <div class="quantity-control">
+
+                                    <!-- Minus Button -->
+                                    <button
+                                        type="button"
+                                        class="qty-btn"
+                                        onclick="updateQuantity(this, -1)"
+                                    >
+                                        -
+                                    </button>
+
+
+                                    <!-- Quantity Input -->
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value="<%= item.quantity %>"
+                                        min="1"
+                                        max="<%= item.product && item.product.stock ? item.product.stock : 999 %>"
+                                    >
+
+
+                                    <!-- Plus Button -->
+                                    <button
+                                        type="button"
+                                        class="qty-btn"
+                                        onclick="updateQuantity(this, 1)"
+                                    >
+                                        +
+                                    </button>
+
+
+                                    <!-- Update Button -->
+                                    <button
+                                        type="submit"
+                                        class="btn btn-sm btn-primary"
+                                    >
+                                        Update
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+
+                            <!-- Remove Product -->
+                            <form
+                                action="/cart/remove/<%= item._id %>?_method=DELETE"
+                                method="POST"
+                                style="display: inline;"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger btn-sm"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                        <!-- Product Subtotal -->
+                        <div class="cart-item-total">
+
+                            <p>Subtotal</p>
+
+                            <strong>
+                                $<%= (
+                                    Number(item.price) *
+                                    Number(item.quantity)
+                                ).toFixed(2) %>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+
+            <!-- ================= Cart Summary ================= -->
+            <div class="cart-summary">
+
+                <h2>Order Summary</h2>
+
+
+                <!-- Total Items -->
+                <div class="summary-row">
+
+                    <span>Total Items:</span>
+
+                    <span>
+                        <%= cart.items.reduce(
+                            (total, item) =>
+                                total + Number(item.quantity),
+                            0
+                        ) %>
+                    </span>
+
+                </div>
+
+
+                <!-- Total Price -->
+                <div class="summary-row total">
+
+                    <span>Total Price:</span>
+
+                    <strong>
+                        $<%= Number(cart.totalPrice || 0).toFixed(2) %>
+                    </strong>
+
+                </div>
+
+
+                <!-- Checkout -->
+                <a
+                    href="/orders/checkout"
+                    class="btn btn-success btn-large checkout-btn"
+                >
+                    <i class="fas fa-credit-card"></i>
+                    Proceed to Checkout
+                </a>
+
+
+                <!-- Clear Cart -->
+                <form
+                    action="/cart/clear?_method=DELETE"
+                    method="POST"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger btn-sm clear-cart-btn"
+                    >
+                        <i class="fas fa-trash"></i>
+                        Clear Cart
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+        <!-- ================= Empty Cart ================= -->
+        <div class="empty-cart">
+
+            <i class="fas fa-shopping-cart"></i>
+
+            <h2>Your cart is empty</h2>
+
+            <p>Browse our products and add items to your cart!</p>
+
+            <a
+                href="/products"
+                class="btn btn-primary"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    <% } %>
+
+</div>

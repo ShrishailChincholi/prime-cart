@@ -1,0 +1,71 @@
+<div class="products-page">
+    <div class="page-header">
+        <h1>Our Products</h1>
+        <div class="category-filter">
+            <!-- ✅ Fix: Use proper URL encoding for categories -->
+            <a href="/products" class="filter-btn <%= !selectedCategory ? 'active' : '' %>">All</a>
+            <% categories.forEach(cat => { %>
+                <a href="/products?category=<%= encodeURIComponent(cat) %>" 
+                   class="filter-btn <%= selectedCategory === cat ? 'active' : '' %>">
+                    <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+
+    <div class="products-grid">
+        <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="<%= product.image %>" 
+                             alt="<%= product.name %>"
+                             onerror="this.onerror=null; this.src='https://picsum.photos/seed/random/400/400'">
+                    </div>
+                    <div class="product-info">
+                        <h3><%= product.name %></h3>
+                        <p class="product-category"><%= product.category.toUpperCase() %></p>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i> <%= product.rating || 0 %>
+                        </div>
+                        <p class="product-price">$<%= product.price.toFixed(2) %></p>
+                        <div class="product-actions">
+                            <a href="/products/<%= product._id %>" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <form action="/cart/add" method="post" class="add-to-cart-form">
+                                <input type="hidden" name="productId" value="<%= product._id %>">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-success" 
+                                        <%= product.stock === 0 ? 'disabled' : '' %>>
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                        <span class="stock-badge <%= product.stock > 0 ? 'in-stock' : 'out-of-stock' %>">
+                            <%= product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock' %>
+                        </span>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filters.</p>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="/products?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedCategory ? '&category=' + encodeURIComponent(selectedCategory) : '' %>" 
+                   class="page-btn <%= currentPage === i ? 'active' : '' %>">
+                    <%= i %>
+                </a>
+            <% } %>
+        </div>
+    <% } %>
+</div>
